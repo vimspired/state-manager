@@ -1,0 +1,17 @@
+{
+  "name": "navigation-manipulation",
+  "version": "0.0.1",
+  "source": "src/index.ts",
+  "main": "dist/main.js",
+  "scripts": {
+    "test": "jest",
+    "watch": "parcel watch",
+    "build": "parcel build"
+  },
+  "devDependencies": {
+    "@types/jest": "^28.1.2",
+    "jest": "^28.1.1",
+    "parcel": "^2.6.1",
+    "ts-jest": "^28.0.5"
+  }
+}
