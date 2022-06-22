@@ -1,9 +1,12 @@
 import { OutlinerState, OutlinerNode, Mode } from "../index";
 
-const generateNode = (id: string, overrides: any = {}): OutlinerNode => ({
+export const generateNode = (
+  id: string,
+  overrides: any = {}
+): OutlinerNode => ({
   id,
   name: "",
-  nodes: "",
+  nodes: [],
   ...overrides,
 });
 

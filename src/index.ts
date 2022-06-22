@@ -1,4 +1,4 @@
-import { decrement } from "./helpers";
+import { decrement, increment } from "./helpers";
 
 export type OutlinerNode = {
   id: string;
@@ -22,11 +22,11 @@ export type OutlinerState = {
 
 export type NodeTuple = [OutlinerNode, OutlinerPath];
 
-type StateManipulationFn = (state: OutlinerState) => OutlinerState;
+export type StateManipulationFn = (state: OutlinerState) => OutlinerState;
 
 export const up: StateManipulationFn = (state) => decrement(state);
+export const down: StateManipulationFn = (state) => increment(state);
 
-export const down: StateManipulationFn = (state) => state;
 export const append: StateManipulationFn = (state) => state;
 export const prepend: StateManipulationFn = (state) => state;
 export const remove: StateManipulationFn = (state) => state;
