@@ -1,5 +1,5 @@
 import { decrement, increment } from "./helpers";
-export { toggleFolding } from "./helpers";
+export { toggleFolding, append } from "./helpers";
 
 export type OutlinerNode = {
   id: string;
@@ -28,6 +28,5 @@ export type StateManipulationFn = (state: OutlinerState) => OutlinerState;
 export const up: StateManipulationFn = (state) => decrement(state);
 export const down: StateManipulationFn = (state) => increment(state);
 
-export const append: StateManipulationFn = (state) => state;
 export const prepend: StateManipulationFn = (state) => state;
 export const remove: StateManipulationFn = (state) => state;

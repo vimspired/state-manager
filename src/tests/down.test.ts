@@ -39,7 +39,7 @@ describe("down", () => {
     });
   });
 
-  describe.only("nested", () => {
+  describe("nested", () => {
     test("stop at last", () => {
       const state = generateState({ currentPath: [4, 0] });
       const child = generateNode("4,0");
