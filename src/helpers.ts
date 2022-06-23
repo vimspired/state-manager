@@ -33,6 +33,11 @@ export const decrement: StateManipulationFn = (state) => {
   return state;
 };
 
+export const insertMode: StateManipulationFn = (state) =>
+  setMode(Mode.Insert)(state);
+export const normalMode: StateManipulationFn = (state) =>
+  setMode(Mode.Normal)(state);
+
 export const append: StateManipulationFn = (state) => {
   const [current, path] = getCurrent(state);
   if (current.nodes.length) {

@@ -1,5 +1,5 @@
 import { decrement, increment } from "./helpers";
-export { toggleFolding, append } from "./helpers";
+export { toggleFolding, append, normalMode, insertMode } from "./helpers";
 
 export type OutlinerNode = {
   id: string;
