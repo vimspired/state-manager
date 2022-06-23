@@ -1,4 +1,4 @@
-import { dropLast, last } from "ramda";
+import { dropLast, last, lensPath, set } from "ramda";
 import {
   OutlinerState,
   OutlinerPath,
@@ -25,6 +25,12 @@ export const decrement: StateManipulationFn = (state) => {
   return state;
 };
 
+export const toggleFolding: StateManipulationFn = (state) => {
+  const [current, path] = getCurrent(state);
+  const isFolded = current.folded;
+  return setPropIn(state, path, "folded", !isFolded);
+};
+
 export const increment: StateManipulationFn = (state) => {
   const [current, currentPath] = getCurrent(state);
   if (current.nodes.length && !current.folded)
@@ -33,8 +39,7 @@ export const increment: StateManipulationFn = (state) => {
   const [sibling, siblingPath] = getNextSibling(state);
   if (sibling) return setCurrentPath(state, siblingPath);
 
-  const [ancestorsSibling, ancestorsSiblingPath] =
-    recursivelyFindNextSiblingOfParent(state);
+  const [, ancestorsSiblingPath] = recursivelyFindNextSiblingOfParent(state);
   if (ancestorsSiblingPath) return setCurrentPath(state, ancestorsSiblingPath);
 
   return state;
@@ -158,4 +163,20 @@ export const recursivelyFindNextSiblingOfParent = (
   }
 
   return [null, null];
+};
+
+const setPropIn = (
+  state: OutlinerState,
+  path: OutlinerPath,
+  prop: string,
+  value: any
+): OutlinerState => {
+  // [1, 2, 3]
+  // [nodes, 1, nodes, 2, nodes, 3]
+  const actualPath = path.reduce(
+    (acc: any[], val: any) => [...acc, "nodes", val],
+    []
+  );
+  const lens = lensPath([...actualPath, prop]);
+  return set(lens, value, state);
 };
