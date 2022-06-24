@@ -33,7 +33,7 @@ describe("mode", () => {
     expect(result.nodes[1].nodes.length).toBe(3);
   });
 
-  test.only("doesn't remove node if it has children", () => {
+  test("doesn't remove node if it has children", () => {
     const state = generateState({ currentPath: [1, 1], mode: Mode.Insert });
     expect(state.nodes[1].nodes.length).toBe(3);
     const result = normalMode(state);

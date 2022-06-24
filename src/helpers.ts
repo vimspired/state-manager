@@ -62,7 +62,7 @@ export const deleteNode: StateManipulationFn = (state) => {
 
 export const append: StateManipulationFn = (state) => {
   const [current, path] = getCurrent(state);
-  if (current.nodes.length) {
+  if (current.nodes.length && !current.folded) {
     // Add to top of children
     const children = insert(0, generateNode(), current.nodes);
     const newPath = [...path, 0];

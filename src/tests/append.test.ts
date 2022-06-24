@@ -41,7 +41,15 @@ describe("append", () => {
       expect(result.nodes[1].nodes.length).toEqual(nodesCount + 1);
       expect(result.nodes[1].nodes[1].id).toEqual("1,0");
     });
-    // Skip folded
+
+    test("add sibling if folded", () => {
+      const state = generateState({ currentPath: [3] });
+      const nodesCount = state.nodes[3].nodes.length;
+      const result = append(state);
+
+      expect(result.nodes[3].nodes.length).toEqual(nodesCount);
+      expect(result.nodes[4].id.length).toBeGreaterThan(10);
+    });
   });
 
   describe("nested", () => {
