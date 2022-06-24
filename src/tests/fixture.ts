@@ -5,7 +5,7 @@ export const generateNode = (
   overrides: any = {}
 ): OutlinerNode => ({
   id,
-  name: "",
+  text: "",
   nodes: [],
   ...overrides,
 });

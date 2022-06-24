@@ -1,4 +1,4 @@
-import { dropLast, insert, last, lensPath, pipe, set } from "ramda";
+import { dropLast, insert, last, lensPath, pipe, remove, set } from "ramda";
 import {
   OutlinerState,
   OutlinerPath,
@@ -35,8 +35,30 @@ export const decrement: StateManipulationFn = (state) => {
 
 export const insertMode: StateManipulationFn = (state) =>
   setMode(Mode.Insert)(state);
-export const normalMode: StateManipulationFn = (state) =>
-  setMode(Mode.Normal)(state);
+
+export const normalMode: StateManipulationFn = (state) => {
+  const [current] = getCurrent(state);
+  if (current.text.length > 0 || current.nodes.length > 0)
+    return setMode(Mode.Normal)(state);
+
+  return pipe(setMode(Mode.Normal), deleteNode)(state);
+};
+
+export const deleteNode: StateManipulationFn = (state) => {
+  if (state.currentPath.length === 1) {
+    const nodes = remove(state.currentPath[0], 1, state.nodes);
+    return {
+      ...state,
+      nodes,
+    };
+  }
+
+  const [parent, parentPath] = getParent(state);
+  const index = last(state.currentPath);
+  const children = remove(index, 1, parent.nodes);
+
+  return setPropIn(parentPath, "nodes", children)(state);
+};
 
 export const append: StateManipulationFn = (state) => {
   const [current, path] = getCurrent(state);
@@ -45,7 +67,7 @@ export const append: StateManipulationFn = (state) => {
     const children = insert(0, generateNode(), current.nodes);
     const newPath = [...path, 0];
     return pipe(
-      setPropInPipe(path, "nodes", children),
+      setPropIn(path, "nodes", children),
       setMode(Mode.Insert),
       setPath(newPath)
     )(state);
@@ -56,7 +78,7 @@ export const append: StateManipulationFn = (state) => {
     const children = insert(index + 1, generateNode(), parent.nodes);
 
     return pipe(
-      setPropInPipe(parentPath, "nodes", children),
+      setPropIn(parentPath, "nodes", children),
       setMode(Mode.Insert),
       setPath(incrementLastIndex(path))
     )(state);
@@ -66,7 +88,7 @@ export const append: StateManipulationFn = (state) => {
 export const toggleFolding: StateManipulationFn = (state) => {
   const [current, path] = getCurrent(state);
   const isFolded = current.folded;
-  return setPropInPipe(path, "folded", !isFolded)(state);
+  return setPropIn(path, "folded", !isFolded)(state);
 };
 
 export const increment: StateManipulationFn = (state) => {
@@ -204,7 +226,7 @@ export const recursivelyFindNextSiblingOfParent = (
 };
 
 // Pipeable functions
-const setPropInPipe = (path: OutlinerPath, prop: string, value: any): any => {
+const setPropIn = (path: OutlinerPath, prop: string, value: any): any => {
   return (state: OutlinerState) => {
     const actualPath = path.reduce(
       (acc: any[], val: any) => [...acc, "nodes", val],
