@@ -85,6 +85,13 @@ export const append: StateManipulationFn = (state) => {
   }
 };
 
+export const setText = (text: string) => {
+  return (state: OutlinerState): OutlinerState => {
+    const [, path] = getCurrent(state);
+    return setPropIn(path, "text", text)(state);
+  };
+};
+
 export const toggleFolding: StateManipulationFn = (state) => {
   const [current, path] = getCurrent(state);
   const isFolded = current.folded;
