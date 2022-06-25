@@ -1,4 +1,12 @@
-import { dropLast, insert, last, lensPath, pipe, remove, set } from "ramda";
+import {
+  dropLast,
+  insert,
+  last,
+  lensPath,
+  pipe,
+  remove as rRemove,
+  set,
+} from "ramda";
 import {
   OutlinerState,
   OutlinerPath,
@@ -46,7 +54,7 @@ export const normalMode: StateManipulationFn = (state) => {
 
 export const deleteNode: StateManipulationFn = (state) => {
   if (state.currentPath.length === 1) {
-    const nodes = remove(state.currentPath[0], 1, state.nodes);
+    const nodes = rRemove(state.currentPath[0], 1, state.nodes);
     return {
       ...state,
       nodes,
@@ -55,7 +63,7 @@ export const deleteNode: StateManipulationFn = (state) => {
 
   const [parent, parentPath] = getParent(state);
   const index = last(state.currentPath);
-  const children = remove(index, 1, parent.nodes);
+  const children = rRemove(index, 1, parent.nodes);
 
   return setPropIn(parentPath, "nodes", children)(state);
 };
@@ -90,6 +98,37 @@ export const setText = (text: string) => {
     const [, path] = getCurrent(state);
     return setPropIn(path, "text", text)(state);
   };
+};
+
+const removeNodeAtPath = (
+  state: OutlinerState,
+  path: OutlinerPath
+): OutlinerState => {
+  const fns = [];
+
+  if (path.length === 1) {
+    const nodes = rRemove(path[0], 1, state.nodes);
+    if (!nodes.length) return state;
+
+    fns.push(setPropIn([], "nodes", nodes));
+  } else {
+    const parentPath = dropLast(1, path);
+    const [parent] = getByPath(state, parentPath);
+    const index = last(path);
+    const nodes = rRemove(index, 1, parent.nodes);
+
+    fns.push(setPropIn(parentPath, "nodes", nodes));
+  }
+
+  fns.push(decrement);
+
+  // @ts-ignore
+  return pipe(...fns)(state);
+};
+
+export const remove: StateManipulationFn = (state) => {
+  const [, path] = getCurrent(state);
+  return removeNodeAtPath(state, path);
 };
 
 export const toggleFolding: StateManipulationFn = (state) => {
