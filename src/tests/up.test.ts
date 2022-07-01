@@ -70,11 +70,11 @@ describe("up", () => {
       expect(result.currentPath).toEqual([4]);
     });
 
-    test("to nested sibling", () => {
-      const state = generateState({ currentPath: [5] });
+    test.only("to nested sibling", () => {
+      const state = generateState({ currentPath: [1, 2, 2] });
       const result = up(state);
 
-      expect(result.currentPath).toEqual([4]);
+      expect(result.currentPath).toEqual([1, 2, 1]);
     });
 
     test("go to last child of sibling", () => {

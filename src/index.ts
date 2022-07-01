@@ -6,6 +6,7 @@ export {
   normalMode,
   insertMode,
   setText,
+  indent,
 } from "./helpers";
 
 export type OutlinerNode = {

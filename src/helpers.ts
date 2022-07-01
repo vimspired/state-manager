@@ -23,6 +23,10 @@ const generateNode = (): OutlinerNode => ({
   nodes: [],
 });
 
+export const indent: StateManipulationFn = (state) => {
+  return state;
+};
+
 export const decrement: StateManipulationFn = (state) => {
   if (state.currentPath.length > 1) {
     const index = last(state.currentPath);
@@ -49,7 +53,7 @@ export const normalMode: StateManipulationFn = (state) => {
   if (current.text.length > 0 || current.nodes.length > 0)
     return setMode(Mode.Normal)(state);
 
-  return pipe(setMode(Mode.Normal), deleteNode)(state);
+  return pipe(setMode(Mode.Normal), deleteNode, decrement)(state);
 };
 
 export const deleteNode: StateManipulationFn = (state) => {
