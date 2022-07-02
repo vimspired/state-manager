@@ -72,6 +72,30 @@ export const deleteNode: StateManipulationFn = (state) => {
   return setPropIn(parentPath, "nodes", children)(state);
 };
 
+export const insertNodeAt = (node: OutlinerNode, path: OutlinerPath) => {
+  return (state: OutlinerState): OutlinerState => {
+    if (path.length === 1) {
+      const children = insert(path[0], node, state.nodes);
+      return setPropIn([], "nodes", children)(state);
+    }
+
+    const parentPath = dropLast(1, path);
+    const [parent] = getByPath(state, parentPath);
+    const index = last(path);
+    const children = insert(index, node, parent.nodes);
+    return setPropIn(parentPath, "nodes", children)(state);
+  };
+};
+
+export const prepend: StateManipulationFn = (state) => {
+  const newNode = generateNode();
+
+  return pipe(
+    insertNodeAt(newNode, state.currentPath),
+    setMode(Mode.Insert)
+  )(state);
+};
+
 export const append: StateManipulationFn = (state) => {
   const [current, path] = getCurrent(state);
   if (current.nodes.length && !current.folded) {

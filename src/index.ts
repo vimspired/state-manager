@@ -1,7 +1,8 @@
 import { decrement, increment } from "./helpers";
 export {
-  toggleFolding,
+  prepend,
   append,
+  toggleFolding,
   remove,
   normalMode,
   insertMode,
@@ -35,5 +36,3 @@ export type StateManipulationFn = (state: OutlinerState) => OutlinerState;
 
 export const up: StateManipulationFn = (state) => decrement(state);
 export const down: StateManipulationFn = (state) => increment(state);
-
-export const prepend: StateManipulationFn = (state) => state;
