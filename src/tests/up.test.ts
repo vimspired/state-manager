@@ -70,7 +70,7 @@ describe("up", () => {
       expect(result.currentPath).toEqual([4]);
     });
 
-    test.only("to nested sibling", () => {
+    test("to nested sibling", () => {
       const state = generateState({ currentPath: [1, 2, 2] });
       const result = up(state);
 
